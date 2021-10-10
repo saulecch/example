@@ -84,11 +84,60 @@ class _UserInformationState extends State<UserInformation> {
                 document.data()! as Map<String, dynamic>;
             return ListTile(
               title: Text(data['full_name']),
-              subtitle: Text(data['company'] + ' ' + data['age'].toString()),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UserDetailPage(
+                      usuarios: document,
+                    ),
+                  ),
+                );
+              },
             );
           }).toList(),
         );
       },
+    );
+  }
+}
+
+class UserDetailPage extends StatefulWidget {
+  final DocumentSnapshot usuarios;
+  UserDetailPage({Key? key, required this.usuarios}) : super(key: key);
+
+  @override
+  _UserDetailPageState createState() => _UserDetailPageState();
+}
+
+class _UserDetailPageState extends State<UserDetailPage> {
+  @override
+  Widget build(BuildContext context) {
+    Map<String, dynamic> usuario =
+        widget.usuarios.data()! as Map<String, dynamic>;
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                usuario['image'] == null
+                    ? Container()
+                    : Image.network(usuario['image'].toString()),
+                Text('''Nombre: ${usuario['full_name']}'''),
+                Text('''Compañia: ${usuario['company']}'''),
+                Text('''Edad: ${usuario['age']}'''),
+              ],
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Regresar'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
