@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:example/useradd.dart';
+import 'package:example/screens/add.dart';
+import 'package:example/screens/edit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -26,25 +27,19 @@ class MyApp extends StatelessWidget {
             return Text('Hay un error');
           } else if (snapshot.hasData) {
             return Scaffold(
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 100,
-                      child: Column(
-                        children: [
-                          Text('Firebase'),
-                          AddUser('Ernesto', 'Mesoamericana', 29)
-                        ],
-                      ),
+              appBar: AppBar(
+                title: Text('Firebase'),
+              ),
+              body: UserInformation(),
+              floatingActionButton: FloatingActionButton(
+                child: Icon(Icons.add),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => AddUserScreen(),
                     ),
-                    Container(
-                      height: 500,
-                      child: UserInformation(),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             );
           } else {
@@ -88,9 +83,11 @@ class _UserInformationState extends State<UserInformation> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => UserDetailPage(
-                      usuarios: document,
-                    ),
+                    builder: (context) => EditUserScreen(
+                        currentName: data['full_name'],
+                        currentCompany: data['company'],
+                        currentAge: data['age'].toString(),
+                        documentId: document.id),
                   ),
                 );
               },
